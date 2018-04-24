@@ -11,9 +11,7 @@ class mainwin(QMainWindow):
         QMainWindow.__init__(self) # inizialize the module
         cWidget = QWidget(self) # widget container
         self.version = 0.2
-        # v0.2: added resize capabilities
-        #       able to select video quality with crf
-        #       cleaner command concatenation
+        # Changelog moved to README.txt
                 
         self.setGeometry(30,30,500,250) # starting position and size of the window
         self.setWindowTitle('A GUI for FFmpeg - v%.1f' % self.version)
