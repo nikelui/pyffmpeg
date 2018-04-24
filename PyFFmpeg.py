@@ -16,6 +16,7 @@ class mainwin(QMainWindow):
         self.setGeometry(30,30,500,250) # starting position and size of the window
         self.setWindowTitle('A GUI for FFmpeg - v%.1f' % self.version)
         self.setStyleSheet('background-color: rgb(100,100,105)')
+#        self.setStyleSheet('QToolTip {background-color: black; color: white}')
         
         # Store parameters here
         self.command = QString('') # it is a string that will be passed to ffmpeg
@@ -83,6 +84,8 @@ class mainwin(QMainWindow):
         self.ledit_out.setReadOnly(False) # input is chosen with dialog
         self.ledit_out.textChanged.connect(self.update_output) # store input path
         self.ledit_out.setStyleSheet('background-color: white')
+        self.ledit_out.setToolTip('Output file. If no path is provided,\nit works on\
+ the current path.\nDefault name is \'output.mp4\'')
         
         hBox2.addWidget(self.ledit_out)
         
@@ -109,10 +112,11 @@ class mainwin(QMainWindow):
         # ComboBox: Audio codec
         self.combo_acodec = QComboBox()
         self.combo_acodec.addItems(['-','AAC','AC3','OGG','MP3'])
-        self.combo_acodec.setStyleSheet('background-color: white; color: black')
+        self.combo_acodec.setStyleSheet('background-color: white; color: black;')
         self.combo_acodec.currentIndexChanged.connect(self.update_acodec)
         self.combo_acodec.setMinimumContentsLength(5)
         self.combo_acodec.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.combo_acodec.setToolTip('<font color=white>Audio codec. Select none for <i>copy</i></font>')
         
         hBox4.addWidget(self.combo_acodec)
         hBox4.addItem(QSpacerItem(50,20))
@@ -133,6 +137,7 @@ class mainwin(QMainWindow):
         self.combo_vcodec.currentIndexChanged.connect(self.update_vcodec)
         self.combo_vcodec.setMinimumContentsLength(6)
         self.combo_vcodec.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+        self.combo_vcodec.setToolTip('<font color=white>Video codec. Select none for <i>copy</i></font>')
                 
         hBox4.addWidget(self.combo_vcodec)
         
@@ -164,7 +169,7 @@ class mainwin(QMainWindow):
         self.ledit_w.setStyleSheet('background-color: white; color: black')
         self.ledit_w.setMaxLength(4)
         self.ledit_w.textChanged.connect(self.width_update)
-#        self.ledit_w.
+        self.ledit_w.setToolTip('Video dimensions. Leave one of the\nfields blank to keep aspect ratio.')
         
         vBox1.addWidget(self.ledit_w)
         
@@ -196,6 +201,7 @@ class mainwin(QMainWindow):
         self.ledit_h.setStyleSheet('background-color: white; color: black')
         self.ledit_h.setMaxLength(4)
         self.ledit_h.textChanged.connect(self.height_update)
+        self.ledit_h.setToolTip('Video dimensions. Leave one of the\nfields blank to keep aspect ratio.')
         
         vBox3.addWidget(self.ledit_h)
         
