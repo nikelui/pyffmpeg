@@ -10,3 +10,4 @@ v0.2
 - Able to set video quality with crf (for now fixed at 23)
 - Cleaner ffmpeg command concatenation
 - (0.2.1) Added tooltips
+- (0.2.2) Fixed tooltips stylesheet

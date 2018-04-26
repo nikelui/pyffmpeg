@@ -16,7 +16,7 @@ class mainwin(QMainWindow):
         self.setGeometry(30,30,500,250) # starting position and size of the window
         self.setWindowTitle('A GUI for FFmpeg - v%.1f' % self.version)
         self.setStyleSheet('background-color: rgb(100,100,105)')
-#        self.setStyleSheet('QToolTip {background-color: black; color: white}')
+#        self.setStyleSheet("QToolTip{background-color: black; color: white;}")
         
         # Store parameters here
         self.command = QString('') # it is a string that will be passed to ffmpeg
@@ -112,11 +112,13 @@ class mainwin(QMainWindow):
         # ComboBox: Audio codec
         self.combo_acodec = QComboBox()
         self.combo_acodec.addItems(['-','AAC','AC3','OGG','MP3'])
-        self.combo_acodec.setStyleSheet('background-color: white; color: black;')
+        self.combo_acodec.setStyleSheet('QComboBox {background-color: white; color: black;};\
+            QToolTip {background-color: black; color: white;}')
         self.combo_acodec.currentIndexChanged.connect(self.update_acodec)
         self.combo_acodec.setMinimumContentsLength(5)
         self.combo_acodec.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-        self.combo_acodec.setToolTip('<font color=white>Audio codec. Select none for <i>copy</i></font>')
+        self.combo_acodec.setToolTip('Audio codec<br> Select none for <i>copy</i>')
+        # if HTML tags are used special characters like \n can't be used
         
         hBox4.addWidget(self.combo_acodec)
         hBox4.addItem(QSpacerItem(50,20))
@@ -133,11 +135,12 @@ class mainwin(QMainWindow):
         # ComboBox: Video codec
         self.combo_vcodec = QComboBox()
         self.combo_vcodec.addItems(['-','H264','H265','MPEG4'])
-        self.combo_vcodec.setStyleSheet('background-color: white; color: black')
+        self.combo_vcodec.setStyleSheet('QComboBox{background-color: white; color: black}\
+            QToolTip {background-color: black; color: white;}')
         self.combo_vcodec.currentIndexChanged.connect(self.update_vcodec)
         self.combo_vcodec.setMinimumContentsLength(6)
         self.combo_vcodec.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-        self.combo_vcodec.setToolTip('<font color=white>Video codec. Select none for <i>copy</i></font>')
+        self.combo_vcodec.setToolTip('Video codec<br> Select none for <i>copy</i>')
                 
         hBox4.addWidget(self.combo_vcodec)
         
