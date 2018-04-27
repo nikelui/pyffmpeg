@@ -10,13 +10,11 @@ class mainwin(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self) # inizialize the module
         cWidget = QWidget(self) # widget container
-        self.version = 0.2
+        self.version = '0.2.3'
         # Changelog moved to README.txt
                 
         self.setGeometry(30,30,500,250) # starting position and size of the window
-        self.setWindowTitle('A GUI for FFmpeg - v%.1f' % self.version)
-        self.setStyleSheet('background-color: rgb(100,100,105)')
-#        self.setStyleSheet("QToolTip{background-color: black; color: white;}")
+        self.setWindowTitle('A GUI for FFmpeg - v%s' % self.version)
         
         # Store parameters here
         self.command = QString('') # it is a string that will be passed to ffmpeg
@@ -39,11 +37,22 @@ class mainwin(QMainWindow):
         vBox2 = QVBoxLayout() # resize sub-layout
         vBox3 = QVBoxLayout() # resize sub-layout
         
+        # StyleSheets
+        self.setStyleSheet("""QWidget{background-color: rgb(100,100,105)}
+            QToolTip{background-color: black; color: white}
+            QLineEdit{background-color: white; color: black}
+            QLabel{color: white}
+            QLineEdit{background-color: white; color:black}
+            QPushButton{background-color: white; color:black}
+            QCheckBox{color: white}
+            QComboBox{background-color: white; color: black}
+            QComboBox QAbstractItemView{background-color: white}
+        """)
+        
         # Label1: input
         self.label_in = QLabel()
         self.label_in.setFont(QFont('Ubuntu',12))
         self.label_in.setText('<b><i>Input file</i></b>')
-        self.label_in.setStyleSheet('color: white')
         self.label_in.setAlignment(Qt.AlignLeft)
         
         vBox.addWidget(self.label_in)
@@ -53,14 +62,12 @@ class mainwin(QMainWindow):
         self.ledit_in.setAlignment(Qt.AlignLeft)
         self.ledit_in.setReadOnly(True) # input is chosen with dialog
         self.ledit_in.textChanged.connect(self.update_input) # store input path
-        self.ledit_in.setStyleSheet('background-color: white')
         
         hBox1.addWidget(self.ledit_in)
         
         # PushButton1: input
         self.but_in = QPushButton()
         self.but_in.setText('Input')
-        self.but_in.setStyleSheet('background-color: white; color: black')
         self.but_in.clicked.connect(self.get_input)
         
         hBox1.addWidget(self.but_in)
@@ -72,7 +79,6 @@ class mainwin(QMainWindow):
         self.label_out = QLabel()
         self.label_out.setFont(QFont('Ubuntu',12))
         self.label_out.setText('<b><i>Output file</i></b>')
-        self.label_out.setStyleSheet('color: white')
         self.label_out.setAlignment(Qt.AlignLeft)
         
         
@@ -83,7 +89,6 @@ class mainwin(QMainWindow):
         self.ledit_out.setAlignment(Qt.AlignLeft)
         self.ledit_out.setReadOnly(False) # input is chosen with dialog
         self.ledit_out.textChanged.connect(self.update_output) # store input path
-        self.ledit_out.setStyleSheet('background-color: white')
         self.ledit_out.setToolTip('Output file. If no path is provided,\nit works on\
  the current path.\nDefault name is \'output.mp4\'')
         
@@ -92,7 +97,6 @@ class mainwin(QMainWindow):
         # PushButton2: output
         self.but_out = QPushButton()
         self.but_out.setText('Output')
-        self.but_out.setStyleSheet('background-color: white; color: black')
         self.but_out.clicked.connect(self.get_output)
         
         hBox2.addWidget(self.but_out)
@@ -105,15 +109,18 @@ class mainwin(QMainWindow):
         self.label_acodec = QLabel()
         self.label_acodec.setFont(QFont('Ubuntu condensed',12))
         self.label_acodec.setText('Audio codec')
-        self.label_acodec.setStyleSheet('color: white')
         
         hBox4.addWidget(self.label_acodec)
         
         # ComboBox: Audio codec
         self.combo_acodec = QComboBox()
+        
+        # Use StyledItemDelegate (without this, it inherits the non-styled ItemDelegate and
+        # stylesheet doesn't work properly)
+        itDel = QStyledItemDelegate()
+        self.combo_acodec.setItemDelegate(itDel)
+        
         self.combo_acodec.addItems(['-','AAC','AC3','OGG','MP3'])
-        self.combo_acodec.setStyleSheet('QComboBox {background-color: white; color: black;};\
-            QToolTip {background-color: black; color: white;}')
         self.combo_acodec.currentIndexChanged.connect(self.update_acodec)
         self.combo_acodec.setMinimumContentsLength(5)
         self.combo_acodec.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
@@ -128,15 +135,17 @@ class mainwin(QMainWindow):
         self.label_vcodec = QLabel()
         self.label_vcodec.setFont(QFont('Ubuntu condensed',12))
         self.label_vcodec.setText('Video codec')
-        self.label_vcodec.setStyleSheet('color: white')        
         
         hBox4.addWidget(self.label_vcodec)
         
         # ComboBox: Video codec
         self.combo_vcodec = QComboBox()
+        
+        # Use StyledItemDelegate (without this, it inherits the non-styled ItemDelegate and
+        # stylesheet doesn't work properly)
+        self.combo_vcodec.setItemDelegate(itDel)
+        
         self.combo_vcodec.addItems(['-','H264','H265','MPEG4'])
-        self.combo_vcodec.setStyleSheet('QComboBox{background-color: white; color: black}\
-            QToolTip {background-color: black; color: white;}')
         self.combo_vcodec.currentIndexChanged.connect(self.update_vcodec)
         self.combo_vcodec.setMinimumContentsLength(6)
         self.combo_vcodec.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
@@ -149,17 +158,14 @@ class mainwin(QMainWindow):
         # CheckBox: resize
         self.check_res = QCheckBox()
         self.check_res.setText('Resize')
-        self.check_res.setStyleSheet('color: white')
         self.check_res.setFont(QFont('Ubuntu',12))
         self.check_res.stateChanged.connect(self.res_update)
-#        self.res_update()
         
         hBox5.addWidget(self.check_res)
         
         # Label: width
         self.label_width = QLabel()
         self.label_width.setText('Width')
-        self.label_width.setStyleSheet('color: white')
         self.label_width.setFont(QFont('Ubuntu',12))
         self.label_width.setAlignment(Qt.AlignCenter)
         
@@ -169,7 +175,6 @@ class mainwin(QMainWindow):
         self.ledit_w = QLineEdit()
         self.ledit_w.setAlignment(Qt.AlignRight)
         self.ledit_w.setValidator(QIntValidator()) # only integer input
-        self.ledit_w.setStyleSheet('background-color: white; color: black')
         self.ledit_w.setMaxLength(4)
         self.ledit_w.textChanged.connect(self.width_update)
         self.ledit_w.setToolTip('Video dimensions. Leave one of the\nfields blank to keep aspect ratio.')
@@ -182,7 +187,6 @@ class mainwin(QMainWindow):
         # spacer + label
         vBox2.addItem(QSpacerItem(10,20))
         self.label_x = QLabel('x')
-        self.label_x.setStyleSheet('color: white')
         self.label_x.setFont(QFont('Ubuntu',12))
         vBox2.addWidget(self.label_x)
         
@@ -191,7 +195,6 @@ class mainwin(QMainWindow):
         # Label: height
         self.label_height = QLabel()
         self.label_height.setText('Height')
-        self.label_height.setStyleSheet('color: white')
         self.label_height.setFont(QFont('Ubuntu',12))
         self.label_height.setAlignment(Qt.AlignCenter)
         
@@ -201,7 +204,6 @@ class mainwin(QMainWindow):
         self.ledit_h = QLineEdit()
         self.ledit_h.setAlignment(Qt.AlignRight)
         self.ledit_h.setValidator(QIntValidator()) # only integer input
-        self.ledit_h.setStyleSheet('background-color: white; color: black')
         self.ledit_h.setMaxLength(4)
         self.ledit_h.textChanged.connect(self.height_update)
         self.ledit_h.setToolTip('Video dimensions. Leave one of the\nfields blank to keep aspect ratio.')
@@ -216,7 +218,6 @@ class mainwin(QMainWindow):
         # PushButton3: convert
         self.but_conv = QPushButton()
         self.but_conv.setText('Convert')
-        self.but_conv.setStyleSheet('background-color: white; color: black')
         self.but_conv.clicked.connect(self.convert2)
         
         hBox3.addStretch()

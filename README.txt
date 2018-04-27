@@ -11,3 +11,4 @@ v0.2
 - Cleaner ffmpeg command concatenation
 - (0.2.1) Added tooltips
 - (0.2.2) Fixed tooltips stylesheet
+- (0.2.3) Better organization of StyleSheet
