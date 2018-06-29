@@ -3,6 +3,14 @@ import sys,os
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
+# In Python3 QStrings are not supported any more, so regular strings are used
+# TODO: python srtings don't have a compare() method, apparently. To fix
+try:
+    from PyQt4.QtCore import QString
+except ImportError:
+    # we are using Python3 so QString is not defined
+    QString = str
+
 ## A GUI for FFmpeg in Qt4
 # requires FFmpeg version 3.4.2
 
@@ -10,7 +18,7 @@ class mainwin(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self) # inizialize the module
         cWidget = QWidget(self) # widget container
-        self.version = '0.2.3'
+        self.version = '0.2.4'
         # Changelog moved to README.txt
                 
         self.setGeometry(30,30,500,250) # starting position and size of the window
