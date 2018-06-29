@@ -8,7 +8,7 @@ Developed under ubuntu 18.04.
 - PyQt4 (on ubuntu repos: `sudo apt install pyqt4-dev-tools`)
 
 ## CHANGELOG
-###v0.2
+### v0.2
 - Added video resize filter
 - Able to set video quality with crf (for now fixed at 23)
 - Cleaner ffmpeg command concatenation
