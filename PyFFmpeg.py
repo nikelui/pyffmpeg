@@ -4,7 +4,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 
 # In Python3 QStrings are not supported any more, so regular strings are used
-# TODO: python srtings don't have a compare() method, apparently. To fix
+# TODO: python strings don't have a compare() method, apparently. To fix
 try:
     from PyQt4.QtCore import QString
 except ImportError:
@@ -18,10 +18,10 @@ class mainwin(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self) # inizialize the module
         cWidget = QWidget(self) # widget container
-        self.version = '0.2.4'
+        self.version = '0.2.5'
         # Changelog moved to README.txt
                 
-        self.setGeometry(30,30,500,250) # starting position and size of the window
+        self.setGeometry(30,30,600,300) # starting position and size of the window
         self.setWindowTitle('A GUI for FFmpeg - v%s' % self.version)
         
         # Store parameters here
@@ -112,6 +112,27 @@ class mainwin(QMainWindow):
         vBox.addLayout(hBox2)
         vBox.addItem(QSpacerItem(15,15))
         
+        # Quality (crf)
+        # Label: crf
+        self.label_crf = QLabel()
+        self.label_crf.setFont(QFont('Ubuntu condensed',12))
+        self.label_crf.setText('CRF')
+
+        # Line Edit: crf
+        self.ledit_crf = QLineEdit()
+        self.ledit_crf.setAlignment(Qt.AlignRight)
+        self.ledit_crf.setFixedWidth(50)
+        v = QIntValidator(0,51) # restricts input
+        self.ledit_crf.setValidator(v) # CRF line edit only accepts integers between 0 and 51
+        self.ledit_crf.textChanged.connect(self.update_crf) # store CRF
+        self.ledit_crf.setToolTip('Video quality.<br>The CRF scale is between 0 (loseless) and 51\
+            (worst quality). The default is 23 and a normally acceptable value is between 17-28.')
+
+        hBox4.addWidget(self.label_crf)
+        hBox4.addWidget(self.ledit_crf)
+        hBox4.addItem(QSpacerItem(50,20))
+        hBox4.addStretch()
+
         # Dropdown menus
         # Label: Audio codec
         self.label_acodec = QLabel()
@@ -136,8 +157,7 @@ class mainwin(QMainWindow):
         # if HTML tags are used special characters like \n can't be used
         
         hBox4.addWidget(self.combo_acodec)
-        hBox4.addItem(QSpacerItem(50,20))
-        hBox4.addStretch()
+        hBox4.addItem(QSpacerItem(20,20))
         
         # Label: Video codec
         self.label_vcodec = QLabel()
@@ -276,6 +296,9 @@ class mainwin(QMainWindow):
         self.vcodec = QString(codecs[key])
 #        print 'vcodec = ', self.vcodec.toUtf8()   # Debug
 
+    def update_crf(self):
+        self.crf = self.ledit_crf.text()
+
     def width_update(self):
         self.width = self.ledit_w.text()
 #        print self.width # Debug
@@ -308,11 +331,18 @@ class mainwin(QMainWindow):
             self.command.append('-i "%s" ' % self.input) # input file
             self.command.append('-c:a %s ' % self.acodec) # audio codec
             self.command.append('-c:v %s ' % self.vcodec) # video codec
-            self.command.append('-crf %s ' % self.crf) # video quality
             
+            if not QString.compare(self.crf,''):
+             # if text is empty, default video quality. CRF = 23
+                self.command.append('-crf 23 ')
+            else:
+                self.command.append('-crf %s ' % self.crf) # video quality
+            
+
             if self.check_res.isChecked():
                 if not QString.compare(self.vcodec,'copy'):
-                    os.system('echo "Error: cannot resize withot encoding video. Please select a video codec."')
+                    os.system('echo "Error: cannot resize without encoding video.\
+                        Please select a video codec."')
                     sys.exit(app.exec_())
                 self.command.append('-vf scale=') # resize filter
                 if not QString.compare(self.width,'') and not QString.compare(self.height,''):
