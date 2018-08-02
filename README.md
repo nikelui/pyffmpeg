@@ -20,3 +20,4 @@ pre-compiled binaries, they have to be put inside the same folder as the script.
 - (0.2.5) Inserted text edit to adjust video quality with CRF.  
   Changed launcher in order to always start a terminal. For now it uses the `x-terminal-emulator`
   command, which might not start the preferred terminal emulator.
+- (0.2.6) Added status bar (still empty) with size grip for resizing. Added images folder.

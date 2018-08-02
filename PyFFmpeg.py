@@ -18,7 +18,7 @@ class mainwin(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self) # inizialize the module
         cWidget = QWidget(self) # widget container
-        self.version = '0.2.5'
+        self.version = '0.2.6'
         # Changelog moved to README.txt
                 
         self.setGeometry(30,30,600,300) # starting position and size of the window
@@ -55,6 +55,8 @@ class mainwin(QMainWindow):
             QCheckBox{color: white}
             QComboBox{background-color: white; color: black}
             QComboBox QAbstractItemView{background-color: white}
+            QStatusBar{border-top: 1px solid #777}
+            QSizeGrip{background-image: url(./images/sizegrip.png); width:16px; height:16px;}
         """)
         
         # Label1: input
@@ -122,8 +124,7 @@ class mainwin(QMainWindow):
         self.ledit_crf = QLineEdit()
         self.ledit_crf.setAlignment(Qt.AlignRight)
         self.ledit_crf.setFixedWidth(50)
-        v = QIntValidator(0,51) # restricts input
-        self.ledit_crf.setValidator(v) # CRF line edit only accepts integers between 0 and 51
+        self.ledit_crf.setValidator(QIntValidator(0,51)) # CRF line edit only accepts integers between 0 and 51
         self.ledit_crf.textChanged.connect(self.update_crf) # store CRF
         self.ledit_crf.setToolTip('Video quality.<br>The CRF scale is between 0 (loseless) and 51\
             (worst quality). The default is 23 and a normally acceptable value is between 17-28.')
@@ -259,10 +260,13 @@ class mainwin(QMainWindow):
         # Applying Layout
         cWidget.setLayout(vBox)
         self.setCentralWidget(cWidget)
+
+        self.statusbar = QStatusBar(self)
+        self.setStatusBar(self.statusbar)
         
         self.res_update() # check the intial state of the checkbox
 
-    # SLOT definitions
+    ## SLOT definitions
 
     def update_input(self):
         self.input = self.ledit_in.text()
