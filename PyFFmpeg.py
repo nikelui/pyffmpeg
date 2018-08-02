@@ -345,9 +345,10 @@ class mainwin(QMainWindow):
 
             if self.check_res.isChecked():
                 if not QString.compare(self.vcodec,'copy'):
-                    os.system('echo "Error: cannot resize without encoding video.\
-                        Please select a video codec."')
-                    sys.exit(app.exec_())
+                    os.system('echo "Error: cannot resize without encoding video. \
+Please select a video codec."')
+                    #sys.exit(app.exec_())
+                    return # this way it just exits from the function instead of terminating the app
                 self.command.append('-vf scale=') # resize filter
                 if not QString.compare(self.width,'') and not QString.compare(self.height,''):
                     self.command.append('iw:ih ') # do not resize
